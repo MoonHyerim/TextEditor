@@ -21,91 +21,128 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import frames.Login;
 
-public class Join extends JFrame{
+//public class Join extends JFrame{
+public class Join extends JPanel{
+	
 	private JButton btn_Join;
 	private JButton btn_cancel;
-	private JTextField tf_JoinID;
-	private JPasswordField pf_JoinPW;
-	private JTextField tf_JoinName;
+	
 	private JLabel lb_pwcheck;
+	
+	private JTextField tf_JoinID;
+	private JTextField tf_JoinName;
+	
+	private JPasswordField pf_JoinPW;
 	private JPasswordField pf_JoinPW2;
 	
+	private Login frameLogin;
 	public Join(){
-		JoinImagePanel pn_Join = new JoinImagePanel();
-		pn_Join.setBackground(Color.WHITE);
-		pn_Join.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(pn_Join);
-		pn_Join.setLayout(null);
 		
+	}
+	
+	public Join(Login frameLogin_){
+		
+		this.frameLogin = frameLogin_;
+		
+		//Init
+		InitComponent();
+		
+		//JoinImagePanel pn_Join = new JoinImagePanel();
+		//pn_Join.setBackground(Color.WHITE);
+		//pn_Join.setBorder(new EmptyBorder(5, 5, 5, 5));
+		//setBorder(new EmptyBorder(5, 5, 5, 5));
+		//setContentPane(pn_Join);
+		//pn_Join.setLayout(null);
+		setBackground(Color.white);
+		setLayout(null);
+		
+		btn_Join.addActionListener(new JoinListener());
+		//setResizable(false);
+		//setTitle("텍스트 에디터");
+		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(0, 0, 252, 342);
+		//setVisible(true);
+
+	}
+	private void InitComponent(){
+		
+		// Label
 		JLabel lb_Join = new JLabel("회원가입");
 		lb_Join.setFont(new Font("맑은 고딕", Font.PLAIN, 16));
 		lb_Join.setBounds(90, 50, 75, 28);
-		pn_Join.add(lb_Join);
+		//pn_Join.add(lb_Join);
 		
 		JLabel lb_ID = new JLabel("아이디");
 		lb_ID.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		lb_ID.setBounds(25, 93, 57, 15);
-		pn_Join.add(lb_ID);
-		
+		//pn_Join.add(lb_ID);
+
 		JLabel lb_PW = new JLabel("비밀번호");
 		lb_PW.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		lb_PW.setBounds(25, 131, 57, 15);
-		pn_Join.add(lb_PW);
+		//pn_Join.add(lb_PW);
 		
 		JLabel lb_PW2 = new JLabel("비밀번호 확인");
 		lb_PW2.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		lb_PW2.setBounds(25, 169, 86, 15);
-		pn_Join.add(lb_PW2);
-		
-		pf_JoinPW = new JPasswordField();
-		pf_JoinPW2 = new JPasswordField();
-		tf_JoinName = new JTextField();
+		//pn_Join.add(lb_PW2);
 		
 		JLabel lb_Name = new JLabel("이름");
 		lb_Name.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		lb_Name.setBounds(25, 204, 57, 15);
-		pn_Join.add(lb_Name);
+		//pn_Join.add(lb_Name);
 		
 		lb_pwcheck = new JLabel("");
 		lb_pwcheck.setHorizontalAlignment(SwingConstants.CENTER);
 		lb_pwcheck.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		lb_pwcheck.setBounds(25, 243, 199, 15);
-		pn_Join.add(lb_pwcheck);
+		//pn_Join.add(lb_pwcheck);
 		
+		// TextField
+		pf_JoinPW = new JPasswordField();
+		pf_JoinPW.setBounds(108, 129, 116, 21);
+		pf_JoinPW2 = new JPasswordField();
+		pf_JoinPW2.setBounds(108, 167, 116, 21);
+		//pn_Join.add(pf_JoinPW);
+		//pn_Join.add(pf_JoinPW2);
+		tf_JoinName = new JTextField();
+		tf_JoinName.setColumns(10);
+		tf_JoinName.setBounds(108, 202, 116, 21);
+		//pn_Join.add(tf_JoinName);
+		
+		tf_JoinID = new JTextField();
+		tf_JoinID.setBounds(108, 91, 116, 21);
+		tf_JoinID.setColumns(10);
+		//pn_Join.add(tf_JoinID);
+		
+		//Button
 		btn_Join = new JButton("가입");
 		btn_Join.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		btn_Join.setBounds(25, 280, 82, 23);
-		pn_Join.add(btn_Join);
+		//pn_Join.add(btn_Join);
 		
 		btn_cancel = new JButton("취소");
 		btn_cancel.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		btn_cancel.setBounds(142, 280, 82, 23);
 		// 취소 버튼 리스너 연결
 		btn_cancel.addActionListener(new JoinListener());
-		pn_Join.add(btn_cancel);
-		
-		tf_JoinID = new JTextField();
-		tf_JoinID.setBounds(108, 91, 116, 21);
-		pn_Join.add(tf_JoinID);
-		tf_JoinID.setColumns(10);
-		
-		pf_JoinPW.setBounds(108, 129, 116, 21);
-		pn_Join.add(pf_JoinPW);
-		
-		pf_JoinPW2.setBounds(108, 167, 116, 21);
-		pn_Join.add(pf_JoinPW2);
-		
-		tf_JoinName.setColumns(10);
-		tf_JoinName.setBounds(108, 202, 116, 21);
-		pn_Join.add(tf_JoinName);
-		
-		btn_Join.addActionListener(new JoinListener());
-		setResizable(false);
-		setTitle("텍스트 에디터");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 252, 342);
-		setVisible(true);
+		//pn_Join.add(btn_cancel);
+
+		// add component
+		add(lb_Join);
+		add(tf_JoinName);
+		add(lb_ID);
+		add(lb_PW);
+		add(lb_PW2);
+		add(lb_Name);
+		add(lb_pwcheck);
+		add(btn_Join);
+		add(btn_cancel);
+		add(tf_JoinID);
+		add(pf_JoinPW);
+		add(pf_JoinPW2);
 	}
 	
 	class JoinListener implements ActionListener{
@@ -134,11 +171,16 @@ public class Join extends JFrame{
 					lb_pwcheck.setText("아이디, 비밀번호 확인 완료");
 					db.InsertUser(tf_JoinID.getText(), tf_JoinName.getText(), pf_JoinPW.getText());
 					db.CloseDBConn(db.c); // DB 연결 종료
+					// go back Login panel
+					
 				}					
 			// 취소 버튼
 			}else if(e.getSource() == btn_cancel){
 				System.out.println("가입 취소");
+				// go back Login pannel
+				frameLogin.ChangePanel("Login");
 			}
+			
 		}
 	}
 	
