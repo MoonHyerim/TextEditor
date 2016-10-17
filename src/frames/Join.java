@@ -1,3 +1,5 @@
+package frames;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -20,87 +22,70 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-class DBConn{
-	String url = "jdbc:oracle:thin:@localhost:1521:orcl";
-	String user = "test";
-	String password = "test";
+public class Join extends JFrame{
+	private JButton btn_Join;
+	private JButton btn_cancel;
+	private JTextField tf_JoinID;
+	private JPasswordField pf_JoinPW;
+	private JTextField tf_JoinName;
+	private JLabel lb_pwcheck;
+	private JPasswordField pf_JoinPW2;
 	
-	Connection c;
-	Statement st;
-	ResultSet rs;
-	
-	
-	
-	public DBConn(){
-		try{
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			c = DriverManager.getConnection(url, user, password);
-			st = c.createStatement();
-			
-			c.close();
-		}catch(Exception e){
-			System.out.println("Database 연동 실패");
-		}
-	}
-}
-
-class JoinUI extends JFrame{
-	JoinImagePanel pn_Join = new JoinImagePanel();
-	JLabel lb_Join = new JLabel("회원가입");
-	JLabel lb_ID = new JLabel("아이디");
-	JLabel lb_PW = new JLabel("비밀번호");
-	JLabel lb_PW2 = new JLabel("비밀번호 확인");
-	JLabel lb_Name = new JLabel("이름");
-	JLabel lb_pwcheck = new JLabel("비밀번호 확인 완료");
-	JButton btn_Join = new JButton("가입");
-	JButton btn_cancel = new JButton("취소");
-	JTextField tf_JoinID = new JTextField();
-	JPasswordField pf_JoinPW = new JPasswordField();
-	JPasswordField pf_JoinPW2 = new JPasswordField();
-	JTextField tf_JoinName = new JTextField();
-	
-	DBConn dbConnection = new DBConn();
-	
-	public JoinUI(){	
+	public Join(){
+		JoinImagePanel pn_Join = new JoinImagePanel();
 		pn_Join.setBackground(Color.WHITE);
 		pn_Join.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(pn_Join);
 		pn_Join.setLayout(null);
 		
+		JLabel lb_Join = new JLabel("회원가입");
 		lb_Join.setFont(new Font("맑은 고딕", Font.PLAIN, 16));
 		lb_Join.setBounds(90, 50, 75, 28);
 		pn_Join.add(lb_Join);
 		
-		
+		JLabel lb_ID = new JLabel("아이디");
 		lb_ID.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		lb_ID.setBounds(25, 93, 57, 15);
 		pn_Join.add(lb_ID);
 		
+		JLabel lb_PW = new JLabel("비밀번호");
 		lb_PW.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		lb_PW.setBounds(25, 131, 57, 15);
 		pn_Join.add(lb_PW);
 		
+		JLabel lb_PW2 = new JLabel("비밀번호 확인");
 		lb_PW2.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		lb_PW2.setBounds(25, 169, 86, 15);
 		pn_Join.add(lb_PW2);
 		
+		pf_JoinPW = new JPasswordField();
+		pf_JoinPW2 = new JPasswordField();
+		tf_JoinName = new JTextField();
+		
+		JLabel lb_Name = new JLabel("이름");
 		lb_Name.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		lb_Name.setBounds(25, 204, 57, 15);
 		pn_Join.add(lb_Name);
 		
+		lb_pwcheck = new JLabel("");
 		lb_pwcheck.setHorizontalAlignment(SwingConstants.CENTER);
 		lb_pwcheck.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		lb_pwcheck.setBounds(25, 243, 199, 15);
 		pn_Join.add(lb_pwcheck);
 		
+		btn_Join = new JButton("가입");
 		btn_Join.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		btn_Join.setBounds(25, 280, 82, 23);
 		pn_Join.add(btn_Join);
 		
+		btn_cancel = new JButton("취소");
 		btn_cancel.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		btn_cancel.setBounds(142, 280, 82, 23);
+		// 취소 버튼 리스너 연결
+		btn_cancel.addActionListener(new JoinListener());
 		pn_Join.add(btn_cancel);
 		
+		tf_JoinID = new JTextField();
 		tf_JoinID.setBounds(108, 91, 116, 21);
 		pn_Join.add(tf_JoinID);
 		tf_JoinID.setColumns(10);
@@ -126,43 +111,39 @@ class JoinUI extends JFrame{
 	class JoinListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			// 가입 버튼
 			if(e.getSource() == btn_Join){
-				/*
-				// 아이디 확인
-				String sql = "SELECT COUNT(*) FROM USERINFO WHERE ID = \'"
-							+ tf_JoinID.getText() + "\'";
-				
-				String sql2 = "SELECT * FROM USERINFO";
-				try{
-					dbConnection.rs = dbConnection.st.executeQuery(sql);
-									
-					dbConnection.rs = dbConnection.st.executeQuery(sql2);
-					System.out.println(dbConnection.rs.getString(0));
-					if(dbConnection.rs.getInt("COUNT(*)") > 0){
-						lb_pwcheck.setForeground(Color.red);
-						lb_pwcheck.setText("아이디가 이미 존재합니다.");
-					}
-					dbConnection.c.close();
-				}catch(Exception ex){
-					System.out.println("아이디 확인 실패(DB오류)");
-				}
-				*/
-				// 비밀번호 확인
-				if(!pf_JoinPW.getText().equals(pf_JoinPW2.getText())){
+				DBConn db = new DBConn();
+				// 아이디 중복 확인
+				if(db.IDCheck(tf_JoinID.getText()) == true){ 
+					lb_pwcheck.setForeground(Color.red);
+					lb_pwcheck.setText("이미 존재하는 아이디입니다.");
+				}		
+				// 비밀번호 일치 확인
+				else if(!pf_JoinPW.getText().equals(pf_JoinPW2.getText())){
 					lb_pwcheck.setForeground(Color.red);
 					lb_pwcheck.setText("비밀번호가 다릅니다.");
 					pf_JoinPW.setText("");
 					pf_JoinPW2.setText("");
-				}else{
+				}else if(tf_JoinID.getText().equals("") || tf_JoinName.getText().equals("") ||
+						pf_JoinPW.getText().equals("") || pf_JoinPW2.getText().equals("")){
+					lb_pwcheck.setForeground(Color.red);
+					lb_pwcheck.setText("빈칸을 채워주십시요.");
+				}else{ 
 					lb_pwcheck.setForeground(Color.black);
-					lb_pwcheck.setText("비밀번호 확인 완료");
-				}
+					lb_pwcheck.setText("아이디, 비밀번호 확인 완료");
+					db.InsertUser(tf_JoinID.getText(), tf_JoinName.getText(), pf_JoinPW.getText());
+					db.CloseDBConn(db.c); // DB 연결 종료
+				}					
+			// 취소 버튼
+			}else if(e.getSource() == btn_cancel){
+				System.out.println("가입 취소");
 			}
 		}
 	}
 	
 	class JoinImagePanel extends JPanel{
-		ImageIcon im = new ImageIcon("JoinImage.png");
+		ImageIcon im = new ImageIcon(MainEditor.imgPath+"JoinImage.png");
 		Image img = im.getImage();
 		
 		@ Override
@@ -170,10 +151,5 @@ class JoinUI extends JFrame{
 			super.paintComponent(g);
 			g.drawImage(img, 97, 10, 50, 43, this);
 		}
-	}
-}
-public class Join {
-	public static void main(String[] args) {
-		new JoinUI();
 	}
 }

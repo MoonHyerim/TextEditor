@@ -1,3 +1,4 @@
+package frames;
 import java.awt.Color;
 import java.awt.Font;
 
@@ -10,14 +11,14 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 
-class TextListUI extends JFrame{
+public class TextList extends JFrame{
 	JPanel pn_TextList = new JPanel();
 	JButton bt_Delete = new JButton("새글작성");
 	JButton bt_Write = new JButton("선택삭제");
 	JScrollPane scrollPane = new JScrollPane();
 	JTable tb_TextList = new JTable();
 	JButton bt_Open = new JButton("확인");
-	public TextListUI(){		
+	public TextList(){		
 		pn_TextList.setBackground(Color.white);
 		pn_TextList.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(pn_TextList);
@@ -62,13 +63,8 @@ class TextListUI extends JFrame{
 		
 		setTitle("텍스트 에디터");
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 431, 291);
 		setVisible(true);
-	}
-}
-public class TextList {
-	public static void main(String[] args) {
-		new TextListUI();
 	}
 }

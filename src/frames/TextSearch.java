@@ -1,3 +1,4 @@
+package frames;
 import java.awt.Color;
 import java.awt.Font;
 
@@ -10,7 +11,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 
-class TextSearchUI extends JFrame{
+public class TextSearch extends JFrame{
 	JPanel pn_TextSearch = new JPanel();
 	JLabel lb_SearchText = new JLabel("찾을 내용");
 	JLabel lb_ChangeText = new JLabel("바꿀 내용");
@@ -22,7 +23,7 @@ class TextSearchUI extends JFrame{
 	JButton bt_Cancel = new JButton("취소");
 	JCheckBox cb_UpLower = new JCheckBox("대/소문자 구분");
 	
-	public TextSearchUI(){
+	public TextSearch(){
 		pn_TextSearch.setBackground(Color.white);
 		pn_TextSearch.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(pn_TextSearch);
@@ -69,13 +70,8 @@ class TextSearchUI extends JFrame{
 		
 		setResizable(false);
 		setTitle("\uD14D\uC2A4\uD2B8 \uC5D0\uB514\uD130");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 400, 199);
 		setVisible(true);
-	}
-}
-public class TextSearch {
-	public static void main(String[] args) {
-		new TextSearchUI();
 	}
 }
