@@ -42,7 +42,8 @@ public class MainEditor extends JFrame {
 	private JPanel contentPane;
 	public static String imgPath = "icons\\";
 	private String fileName;
-	
+	// _2016-10-18_HYERIM
+	public static JTextPane textPane;
 	class MyKeyDispatcher implements KeyEventDispatcher {
 		
 		@Override
@@ -179,7 +180,10 @@ public class MainEditor extends JFrame {
 		// end of 툴바
 		
 		// 에디터 영역
-		JTextPane textPane = new JTextPane();
+		// 2016-10-18_HYERIM 아래와 같이 변경
+		// JTextPane textPane = new JTextPane();
+		textPane = new JTextPane();
+		
 		Document doc = textPane.getDocument();
 		// 텍스트 영역 ctrl+z 이벤트 바인딩
 		UndoManager undo = new UndoManager();

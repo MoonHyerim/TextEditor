@@ -16,10 +16,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-
-
 public class Login extends JFrame{
-	
 	//Panel
 	private LoginImagePanel pn_Login = new LoginImagePanel();
 	// Label 
@@ -47,7 +44,6 @@ public class Login extends JFrame{
 	
 	//Initialize 
 	private void InitComponent(){
-		
 		// login pannel
 		pn_Login.setBackground(Color.WHITE);
 		pn_Login.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -67,7 +63,6 @@ public class Login extends JFrame{
 		lb_Login.setFont(new Font("맑은 고딕", Font.PLAIN, 16));
 		lb_Login.setBounds(93, 57, 57, 34);
 		
-		JLabel lb_Check;
 		lb_Check = new JLabel("");
 		lb_Check.setHorizontalAlignment(SwingConstants.CENTER);
 		lb_Check.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
@@ -103,16 +98,12 @@ public class Login extends JFrame{
 	
 	public void ChangePanel(String panelName){
 		if(panelName.equals("Login")){
-			System.out.println("in");
 			getContentPane().removeAll();
 			getContentPane().add(pn_Login);
 			setBounds(100, 100, 244, 249);
 			revalidate();
 			repaint();
-			System.out.println("end");
-			
 		}
-	
 	}
 	
 	class LoginImagePanel extends JPanel{
@@ -141,7 +132,7 @@ public class Login extends JFrame{
 					lb_Check.setForeground(Color.red);
 					lb_Check.setText("비밀번호가 일치하지않습니다.");
 				}else{
-					//
+					System.out.println("로그인 성공");
 				}
 				db.CloseDBConn(db.c);
 			}else if(e.getSource() == bt_Join){ //회원가입화면 전환
@@ -150,10 +141,8 @@ public class Login extends JFrame{
 				getContentPane().add(pn_Join);
 				setBounds(100, 100, 252, 342);
 				revalidate();
-				repaint();
-				
+				repaint();	
 			}
-			
 		}
 	}
 }
