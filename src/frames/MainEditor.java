@@ -106,7 +106,18 @@ public class MainEditor extends JFrame {
 		menuBar.setBounds(0, 0, 465, 21);
 		contentPane.add(menuBar);
 		
+		//I think that it is better to make class of each other
+		// like  toolbar class , menu class , and so on.. 
+		// and you just create an object (toolbar , menu ...)
+		// but now We have no time. so.. keep going~ 
+		
+		// constructor have to be light , 
+		//because other team mates and you see this part for the first time.
+		// so you have to separate functions
+		// it is so heavy to understand.
+		
 		// 툴바
+		// TODO :: Make toolbar Initialize function
 		JPanel panel = new JPanel();
 		panel.setBounds(0, 20, 465, 31);
 		contentPane.add(panel);
@@ -180,6 +191,8 @@ public class MainEditor extends JFrame {
 		// end of 툴바
 		
 		// 에디터 영역
+		// TODO :: Make Editor Initialize function
+		
 		// 2016-10-18_HYERIM 아래와 같이 변경
 		// JTextPane textPane = new JTextPane();
 		textPane = new JTextPane();
@@ -211,6 +224,7 @@ public class MainEditor extends JFrame {
 		
 		// 메뉴
 		// 파일 메뉴
+		// TODO - same as above 
 		JMenu mnFile = new JMenu("파일");
 		mnFile.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		menuBar.add(mnFile);
@@ -242,6 +256,7 @@ public class MainEditor extends JFrame {
 		mnFile.add(mitem_exit);
 		
 		// 편집 메뉴
+		// TODO - as above
 		JMenu mnEdit = new JMenu("편집");
 		mnEdit.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		menuBar.add(mnEdit);
@@ -285,6 +300,7 @@ public class MainEditor extends JFrame {
 		mnEdit.add(mitem_selectall);
 		
 		// 로그인 메뉴
+		//TODO  - as above
 		JMenu mnLogin = new JMenu("로그인");
 		mnLogin.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		menuBar.add(mnLogin);
@@ -295,6 +311,7 @@ public class MainEditor extends JFrame {
 		mnLogin.add(mitem_login);
 		
 		// 도움말 메뉴
+		// TODO - as above 
 		JMenu mnHelp = new JMenu("도움말");
 		mnHelp.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		menuBar.add(mnHelp);

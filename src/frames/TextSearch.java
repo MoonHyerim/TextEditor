@@ -13,9 +13,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Document;
 import javax.swing.text.Highlighter;
 import javax.swing.text.Highlighter.HighlightPainter;
+import javax.swing.text.Position;
 
 
 public class TextSearch extends JFrame{
@@ -137,6 +140,60 @@ public class TextSearch extends JFrame{
 			}
 			*/
 	}
+	
+	// Find word function
+	private void FindWord(){
+		
+		String findStr = tf_Search.getText();
+		Document doc = MainEditor.textPane.getDocument();
+		
+		//String strTotalText = MainEditor.textPane.getText(0, doc.getLength());
+		
+		int pos = MainEditor.textPane.getCaretPosition()-1; // current cursor position
+
+		int wordLength = findStr.length(); // word length
+
+		if (pos + wordLength > doc.getLength()) {
+		    pos = 0;
+		}
+		pos = FindWordProcess(pos, wordLength, findStr , doc);
+		if ( pos !=0) {
+			setFoundWordHightlight(pos, pos+findStr.length());
+		}
+	}
+	
+	private void setFoundWordHightlight(int startpos , int endpos){
+		MainEditor.textPane.setSelectionStart(startpos);
+		MainEditor.textPane.setSelectionEnd(endpos);
+		MainEditor.textPane.getCaret().setSelectionVisible(true);
+	}
+	
+	private int FindWordProcess(int startpos , int wordLength, String findStr , Document doc){
+		int docLength = doc.getLength();
+		boolean checkTotalDoc = false;
+		try {
+			while (startpos + wordLength <= docLength) {
+				String strFound;
+				strFound = doc.getText(startpos, wordLength).toLowerCase();
+			
+				if (strFound.equals(findStr)) {
+					return startpos;
+				}
+				startpos++;
+            
+				if(startpos >=doc.getLength() && checkTotalDoc){	// end document check
+					startpos =0;
+					checkTotalDoc = true;
+					return 0;
+				}
+			}
+        } catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0;
+		
+	}
 	// _HYERIM_2016-10-18_모두바꾸기
 	private void ChangeAllText(){
 		String tmp_content;
@@ -166,7 +223,8 @@ public class TextSearch extends JFrame{
 			upLowerFlag = cb_UpLower.isSelected(); // 선택했을시 true, 안했을시 false
 					
 			if(e.getSource() == bt_Search){ // 다음찾기
-				wordSearch();
+				//wordSearch();
+				FindWord();
 			}else if(e.getSource() == bt_AllChagne){ //모두 바꾸기
 				ChangeAllText();
 			}else if(e.getSource() == bt_Change){ // 바꾸기
