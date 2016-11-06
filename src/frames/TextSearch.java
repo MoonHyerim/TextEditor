@@ -3,8 +3,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -14,12 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Document;
-import javax.swing.text.Highlighter;
-import javax.swing.text.Highlighter.HighlightPainter;
-import javax.swing.text.Position;
-
 
 public class TextSearch extends JFrame{
 	JPanel pn_TextSearch = new JPanel();
@@ -109,57 +102,17 @@ public class TextSearch extends JFrame{
 		pn_TextSearch.add(cb_UpLower);
 	}
 	
-	// _2016-10-18_HYERIM_단어 검색
-	private void wordSearch(){
-			
-			ArrayList<Integer> wordIndex = new ArrayList<Integer>(); //문자 위치 저장할 리스트
-			int pos = content.indexOf(sWord); // 검색할 단어의 시작 위치?
-			
-			while(pos>-1){
-				wordIndex.add(pos);
-				pos = content.indexOf(sWord, pos+1);
-			}
-			System.out.println(wordIndex);
-			for(int i=0; i<wordIndex.size(); i++){
-				int j = wordIndex.get(i);
-				String s = content.substring(j, j+cWord.length() );
-				System.out.println(s);
-			}
-			
-			
-			/*// 하이라이트 처리부
-			int p0 = sContent.indexOf(sWord);
-			int p1 = p0 + sWord.length();
-						
-			Highlighter hl = MainEditor.textPane.getHighlighter();
-			HighlightPainter p = new DefaultHighlighter.DefaultHighlightPainter(Color.PINK);
-			try{
-				hl.addHighlight(p0, p1, p);
-			}catch(Exception e){
-				System.out.println("HighLighter Error");
-			}
-			*/
-	}
-	
-	// Find word function
-	private void FindWord(){
-		
+	private void FindWord(){	
 		String findStr = tf_Search.getText();
 		Document doc = MainEditor.textPane.getDocument();
-		
-		//String strTotalText = MainEditor.textPane.getText(0, doc.getLength());
-		
-		int pos = MainEditor.textPane.getCaretPosition()-1; // current cursor position
 
+		int pos = MainEditor.textPane.getCaretPosition();
 		int wordLength = findStr.length(); // word length
-
-		if (pos + wordLength > doc.getLength()) {
-		    pos = 0;
-		}
+		
 		pos = FindWordProcess(pos, wordLength, findStr , doc);
-		if ( pos !=0) {
+		
+		if(pos>=0)
 			setFoundWordHightlight(pos, pos+findStr.length());
-		}
 	}
 	
 	private void setFoundWordHightlight(int startpos , int endpos){
@@ -170,30 +123,34 @@ public class TextSearch extends JFrame{
 	
 	private int FindWordProcess(int startpos , int wordLength, String findStr , Document doc){
 		int docLength = doc.getLength();
-		boolean checkTotalDoc = false;
 		try {
+			// 커서가 맨 끝에 있을때
+			if(startpos >= docLength)
+				return -1;
+			
 			while (startpos + wordLength <= docLength) {
 				String strFound;
-				strFound = doc.getText(startpos, wordLength).toLowerCase();
-			
+				
+				// 대소문자 구분
+				if(upLowerFlag==true)
+					strFound = doc.getText(startpos, wordLength); 
+				else{
+					strFound = doc.getText(startpos, wordLength).toLowerCase();
+					findStr = findStr.toLowerCase();
+				}
+
 				if (strFound.equals(findStr)) {
 					return startpos;
 				}
+				
 				startpos++;
-            
-				if(startpos >=doc.getLength() && checkTotalDoc){	// end document check
-					startpos =0;
-					checkTotalDoc = true;
-					return 0;
-				}
 			}
         } catch (BadLocationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return 0;
-		
+		return -1;	
 	}
+	
 	// _HYERIM_2016-10-18_모두바꾸기
 	private void ChangeAllText(){
 		String tmp_content;
@@ -206,12 +163,24 @@ public class TextSearch extends JFrame{
 	
 	// _HYERIM_2016-10-18_바꾸기
 	private void ChangeText(){
-		String tmp_content;
-		if(upLowerFlag == false) // 대소문자 구분 안함
-			tmp_content = content.replaceFirst("(?i)"+sWord, cWord);
-		else
-			tmp_content = content.replaceFirst(sWord, cWord);
-		MainEditor.textPane.setText(tmp_content);
+		Document doc = MainEditor.textPane.getDocument();
+		int findStrLength = sWord.length();
+		int pos = MainEditor.textPane.getCaretPosition();
+		int wordLength = sWord.length(); // word length
+		
+		pos = FindWordProcess(pos, wordLength, sWord , doc);
+		
+		if(pos>=0){
+			String tmpContent = content.substring(0, pos);
+			content = content.substring(pos, content.length());
+			if(upLowerFlag == false)
+				content = content.replaceFirst("(?i)"+sWord, cWord);
+			else
+				content = content.replaceFirst(sWord, cWord);
+			
+			MainEditor.textPane.setText(tmpContent + content);
+			MainEditor.textPane.setCaretPosition(pos+cWord.length());	
+		}
 	}
 	
 	class TextSearchListener implements ActionListener{
@@ -223,7 +192,6 @@ public class TextSearch extends JFrame{
 			upLowerFlag = cb_UpLower.isSelected(); // 선택했을시 true, 안했을시 false
 					
 			if(e.getSource() == bt_Search){ // 다음찾기
-				//wordSearch();
 				FindWord();
 			}else if(e.getSource() == bt_AllChagne){ //모두 바꾸기
 				ChangeAllText();

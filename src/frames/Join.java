@@ -6,6 +6,8 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.security.interfaces.RSAKey;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -39,16 +41,18 @@ public class Join extends JPanel{
 	private JPasswordField pf_JoinPW2;
 	
 	private Login frameLogin;
-	
+	private DBConn db; //_HYERIM_
 	public Join(){	}
 	
-	public Join(Login frameLogin_){
+	public Join(Login frameLogin_, DBConn db){
 		
 		this.frameLogin = frameLogin_;
 		
 		//Init
 		InitComponent();
 		
+		//DB Connection
+		this.db = db; //_HYERIM_
 		//JoinImagePanel pn_Join = new JoinImagePanel();
 		//pn_Join.setBackground(Color.WHITE);
 		//pn_Join.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -67,7 +71,6 @@ public class Join extends JPanel{
 
 	}
 	private void InitComponent(){
-		
 		// Label
 		JLabel lb_Join = new JLabel("회원가입");
 		lb_Join.setFont(new Font("맑은 고딕", Font.PLAIN, 16));
@@ -131,6 +134,7 @@ public class Join extends JPanel{
 		add(tf_JoinID);
 		add(pf_JoinPW);
 		add(pf_JoinPW2);
+
 	}
 	
 	class JoinListener implements ActionListener{
@@ -138,7 +142,6 @@ public class Join extends JPanel{
 		public void actionPerformed(ActionEvent e) {
 			// 가입 버튼
 			if(e.getSource() == btn_Join){
-				DBConn db = new DBConn();
 				// 아이디 중복 확인
 				if(db.IDCheck(tf_JoinID.getText()) == true){ 
 					lb_pwcheck.setForeground(Color.red);
@@ -159,9 +162,8 @@ public class Join extends JPanel{
 					lb_pwcheck.setText("아이디, 비밀번호 확인 완료");
 					db.InsertUser(tf_JoinID.getText(), tf_JoinName.getText(), pf_JoinPW.getText());
 					db.CloseDBConn(db.c); // DB 연결 종료
-					// go back Login panel
 					
-					JOptionPane.showMessageDialog(null, "회원가입이 완료되었습니다.");
+					JOptionPane.showMessageDialog(getParent(), "회원가입이 완료되었습니다.");
 					if(JOptionPane.YES_OPTION == 0)
 						frameLogin.ChangePanel("Login");
 				}					
@@ -169,13 +171,12 @@ public class Join extends JPanel{
 			}else if(e.getSource() == btn_cancel){
 				System.out.println("가입 취소");
 				// go back Login pannel
+				db.CloseDBConn(db.c); // DB 연결 종료
 				frameLogin.ChangePanel("Login");
-				
 			}
-			
 		}
 	}
-	
+
 	@ Override
 	public void paintComponent(Graphics g){
 		ImageIcon im = new ImageIcon(MainEditor.imgPath+"JoinImage.png");
@@ -183,5 +184,4 @@ public class Join extends JPanel{
 		super.paintComponent(g);
 		g.drawImage(img, 97, 10, 50, 43, this);
 	}
-	
 }

@@ -5,6 +5,8 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -16,7 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-public class Login extends JFrame{
+public class Login extends JFrame implements WindowListener{
 	//Panel
 	private LoginImagePanel pn_Login = new LoginImagePanel();
 	// Label 
@@ -30,10 +32,23 @@ public class Login extends JFrame{
 	private JButton bt_Join = new JButton("회원가입");
 	private JButton bt_Login = new JButton("로그인");
 	
-	public Login(){
-		
+	//_HYERIM
+	private MainEditor mainEditor;
+	private DBConn db;
+	private String calledMethod;
+	public Login(MainEditor mainEditor, String calledMethod){
 		//Init
 		InitComponent();
+		
+		//DB Connection
+		db = new DBConn(); // DB연결
+		
+		//_HYERIM_
+		this.mainEditor = mainEditor;
+		this.calledMethod = calledMethod;
+		
+		//_HYERIM_윈도우 리스너 추가
+		addWindowListener(this);
 		
 		setTitle("텍스트 에디터");
 		setResizable(false);
@@ -123,7 +138,6 @@ public class Login extends JFrame{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource() == bt_Login){ 
-				DBConn db = new DBConn(); // DB연결
 				String result = db.LoginCheck(tf_ID.getText(), pf_Password.getText());
 				if(result.equals("NOID")){
 					lb_Check.setForeground(Color.red);
@@ -133,10 +147,17 @@ public class Login extends JFrame{
 					lb_Check.setText("비밀번호가 일치하지않습니다.");
 				}else{
 					System.out.println("로그인 성공");
+					mainEditor.setUserInfo(tf_ID.getText(), pf_Password.getText());
+					db.CloseDBConn(db.c);
+					dispose();
+					
+					if(calledMethod.equals("TEXTLIST"))
+						new TextList(tf_ID.getText(), mainEditor);
+					else if(calledMethod.equals("SAVETODB"))
+						mainEditor.calledSaveToDB();
 				}
-				db.CloseDBConn(db.c);
 			}else if(e.getSource() == bt_Join){ //회원가입화면 전환
-				Join pn_Join= new Join(Login.this);
+				Join pn_Join= new Join(Login.this , db);
 				getContentPane().removeAll();
 				getContentPane().add(pn_Join);
 				setBounds(100, 100, 252, 342);
@@ -145,4 +166,27 @@ public class Login extends JFrame{
 			}
 		}
 	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {}
+
+	@Override
+	public void windowClosed(WindowEvent e) {}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		db.CloseDBConn(db.c);
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {}
+	
+	@Override
+	public void windowDeiconified(WindowEvent e) {}
+
+	@Override
+	public void windowIconified(WindowEvent e) {}
+
+	@Override
+	public void windowOpened(WindowEvent e) {}
 }
